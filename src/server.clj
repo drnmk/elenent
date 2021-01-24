@@ -8,7 +8,64 @@
             [compojure.core :as cc]
             [compojure.route :as cr]
             [hiccup.page :as hcp :refer [html5]]
-            [hiccup.core :as hcc :refer [html h]]))
+            [hiccup.core :as hcc :refer [html h]]
+            [datomic.api :as d]
+            ))
+
+(def db-uri "datomic:mem://ex-db-1")
+
+(d/create-database db-uri)
+
+(def conn (d/connect db-uri))
+
+(def schema
+  [{:db/ident :client/name
+    :db/valueType :db.type/string
+    :db/unique :db.unique/identity
+    :db/cardinality :db.cardinality/one}
+   {:db/ident :client/email
+    :db/valueType :db.type/string
+    :db/unique :db.unique/identity
+    :db/cardinality :db.cardinality/one}
+   {:db/ident :client/asset
+    :db/valueType :db.type/ref
+    :db/cardinality :db.cardinality/many}
+   {:db/ident :client/contract
+    :db/valueType :db.type/ref
+    :db/cardinality :db.cardinality/many}
+   {:db/ident :asset/breed
+    :db/valueType :db.type/keyword
+    :db/cardinality :db.cardinality/one}
+   {:db/ident :asset/name
+    :db/valueType :db.type/string
+    :db/unique :db.unique/identity
+    :db/cardinality :db.cardinality/one}
+   {:db/ident :contract/name
+    :db/valueType :db.type/string
+    :db/unique :db.unique/identity
+    :db/cardinality :db.cardinality/one}
+   {:db/ident :contract/asset
+    :db/valueType :db.type/ref
+    :db/cardinality :db.cardinality/one}
+   ])
+
+;; transact schema into db
+(d/transact conn schema)
+
+;; enter sample assets
+(d/transact conn [{:asset/breed :corporate-bond
+                   :asset/name "msft-bond"}
+                  {:asset/breed :common-stock
+                   :asset/name "tsla-stock"}])
+
+(def assets-read-from-db 
+  (d/q '[:find ?e ?b ?n
+         :where
+         [?e :asset/breed ?b]
+         [?e :asset/name ?n]]
+       (d/db conn)))
+
+(println (second (rest (first assets-read-from-db))))
 
 (defn items-page []
   (hcp/html5 {:lang :en}
@@ -21,9 +78,10 @@
              [:body
               [:div.container
                [:h1 "my items:"]
-               [:p "dog"]
-               [:p "cat"]
-               [:p "cow"]]
+               [:p (->> assets-read-from-db
+                        first
+                        rest
+                        second)]]
               [:script {:src "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"}]
               [:script {:src "/bootstrap/js/bootstrap.min.js"}]]))
 
