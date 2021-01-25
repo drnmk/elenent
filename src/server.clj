@@ -52,11 +52,20 @@
 ;; transact schema into db
 (d/transact conn schema)
 
+(def sample-assets
+  [{:asset/breed :corporate-bond :asset/name "msft-5-year-bond"}
+   {:asset/breed :corporate-bond :asset/name "amazon-10-year-bond"}
+   {:asset/breed :common-stock :asset/name "tsla-common-stock"}
+   {:asset/breed :common-stock :asset/name "tsla-preferred-stock"}
+   {:asset/breed :etf :asset/name "voo"}
+   {:asset/breed :etf :asset/name "jets"}
+   {:asset/breed :cryptocurrency :asset/name "btc"}
+   {:asset/breed :cryptocurrency :asset/name "eth"}
+   {:asset/breed :real-estate :asset/name "100 broad ave, nyc"}
+   {:asset/breed :real-estate :asset/name "tampa 200 land"}])
+
 ;; enter sample assets
-(d/transact conn [{:asset/breed :corporate-bond
-                   :asset/name "msft-bond"}
-                  {:asset/breed :common-stock
-                   :asset/name "tsla-stock"}])
+(d/transact conn sample-assets)
 
 (def assets-read-from-db 
   (d/q '[:find ?e ?b ?n
@@ -67,7 +76,7 @@
 
 (println (second (rest (first assets-read-from-db))))
 
-(defn items-page []
+(defn layout [components]
   (hcp/html5 {:lang :en}
              [:head
               [:title "Elenent!"]
@@ -76,26 +85,41 @@
               [:link {:href "/bootstrap/css/bootstrap.min.css"
                       :rel :stylesheet}]]
              [:body
-              [:div.container
-               [:h1 "my items:"]
-               [:p (->> assets-read-from-db
-                        first
-                        rest
-                        second)]]
+              [:div components]
               [:script {:src "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"}]
               [:script {:src "/bootstrap/js/bootstrap.min.js"}]]))
+
+(defn items-page [assets]
+  [:div.container
+   [:h1 "items to test hiccup and datomic:"]
+   [:table.table 
+    [:tr
+     [:th "datomic id"]
+     [:th "attribute"]
+     [:th "value"]]
+    (for [asset assets]
+      [:tr
+       [:td (first asset)]
+       [:td (second asset)]
+       [:td (last asset)]])]])
+
+(defn greet-page []
+  [:div.container
+   [:h1 "hello, this is elenent app in contstruction."]
+   [:h2 "I practiced hiccup and datomic in report page"]
+   [:a {:href "/reports"} "Go to reports page!"]])
 
 (defn greet [req]
   (do 
     (println (str req))
     {:status 200
      :headers {}
-     :body "<h1>Hi all, this is elenent in construction.</h1>"}))
+     :body (layout (greet-page))}))
 
 (defn get-reports [req]
   {:status 200
    :headers {}
-   :body (items-page)})
+   :body (layout (items-page assets-read-from-db))})
 
 (defn get-assets [req]
   {:status 200
