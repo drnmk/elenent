@@ -1,38 +1,167 @@
 (ns elenent.db
   (:require
-   [datomic.api :as d]
-   [elenent.schema]))
+   [java-time :as jtm]
+   [next.jdbc :as jdb]   
+   [honeysql.core :as hsq]
+   [honeysql.helpers :as hsh]))
 
-(def db-uri "datomic:mem://ex-db-1")
+(def db
+  {:dbtype "postgresql"
+   :dbname "elenent_db"
+   :host "localhost"
+   :user "elenent_adm"
+   :password "el1234"})
 
-(d/create-database db-uri)
+(def ds
+  (jdb/get-datasource db))
 
-(def conn (d/connect db-uri))
+;; client
 
-;; transact schema into db
-(d/transact conn elenent.schema/schema)
+(jdb/execute!
+ ds
+ (hsq/format
+  {:insert-into :client
+   :columns [:id :created_at]
+   :values [[:default :default]]}))
 
-(def sample-assets
-  [{:asset/breed :corporate-bond :asset/name "msft-5-year-bond"}
-   {:asset/breed :corporate-bond :asset/name "amazon-10-year-bond"}
-   {:asset/breed :common-stock :asset/name "tsla-common-stock"}
-   {:asset/breed :common-stock :asset/name "tsla-preferred-stock"}
-   {:asset/breed :etf :asset/name "voo"}
-   {:asset/breed :etf :asset/name "jets"}
-   {:asset/breed :cryptocurrency :asset/name "btc"}
-   {:asset/breed :cryptocurrency :asset/name "eth"}
-   {:asset/breed :real-estate :asset/name "100 broad ave, nyc"}
-   {:asset/breed :real-estate :asset/name "tampa 200 land"}])
+(jdb/execute!
+ ds
+ (hsq/format
+  {:select [:*]
+   :from [:client]}))
 
-;; enter sample assets
-(d/transact conn sample-assets)
 
-(def assets-read-from-db 
-  (d/q '[:find ?e ?b ?n
-         :where
-         [?e :asset/breed ?b]
-         [?e :asset/name ?n]]
-       (d/db conn)))
+;; client-info
+
+(jdb/execute!
+ ds
+ (hsq/format
+  {:insert-into :client_info
+   :columns [:id :client_id :name :email :entered_at]
+   :values [[:default 1 "ABC Corp." "abc@zzz.com" :default]]}))
+
+(jdb/execute!
+ ds
+ (hsq/format
+  {:select [:*]
+   :from [:client_info]}))
+
+;; person 
+(jdb/execute!
+ ds
+ (hsq/format
+  {:insert-into :person
+   :columns [:id :client_id :created_at]
+   :values [[:default 1 :default]]}))
+
+(jdb/execute!
+ ds
+ (hsq/format
+  {:select [:*]
+   :from [:person]}))
+
+;; person_info
+
+(jdb/execute!
+ ds
+ (hsq/format
+  {:insert-into :person_info
+   :columns [:id :person_id :name :email :phone :entered_at]
+   :values [[:default 1 "Janet Cole" "janet_cole@zzz.com" "1234-1234" :default]]}))
+
+(jdb/execute!
+ ds
+ (hsq/format
+  {:select [:*]
+   :from [:person_info]}))
+
+
+;;
+
+(jdb/execute!
+ ds
+ (hsq/format
+  {:insert-into :log
+   :columns [:id :person_id :created_at]
+   :values [[:default 1 (hsq/call :now)]]}))
+
+(jdb/execute!
+ ds
+ (hsq/format
+  {:select [:*]
+   :from [:log]}))
+
+
+
+(jdb/execute!
+ ds
+ (hsq/format
+  {:select [:*]
+   :from [:security]}))
+
+(jdb/execute!
+ ds
+ (hsq/format
+  {:insert-into :security
+   :columns [:id :branch :log_id]
+   :values [[:default "security_treasury_note" 2]]}))
+
+(jdb/execute!
+ ds
+ (hsq/format
+  {:select [:*]
+   :from [:security_treasury_note]}))
+
+(def sample-tn-1
+  [:default
+   1
+   "vxab"
+   "treasury 10y"
+   100000
+   (jtm/local-date 2021 1 21)
+   1
+   nil
+   true])
+
+(def sample-tn-2
+  [:default
+   1
+   "vxab"
+   "treasury 10y"
+   100000
+   (jtm/local-date 2021 1 21)
+   2
+   1
+   false])
+
+(def sample-tn-3
+  [:default
+   1
+   "vxab"
+   "treasury 10y"
+   200000
+   (jtm/local-date 2021 1 22)
+   3
+   nil
+   true])
+
+
+(jdb/execute!
+ ds
+ (hsq/format
+  {:insert-into :security_treasury_note
+   :columns [:id
+             :security_id
+             :ticker
+             :description
+             :multiplier
+             :maturity
+             :log
+             :retract_id
+             :op]
+   :values [sample-tn-1
+            sample-tn-2
+            sample-tn-3]}))
 
 
 
