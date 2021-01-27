@@ -1,5 +1,5 @@
-(ns main
-  (:require [server :as srv]))
+(ns elenent.main
+  (:require [elenent.server :as srv]))
 
 (defn run-dev [args]
   (srv/run-dev 8080))
