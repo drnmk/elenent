@@ -11,60 +11,37 @@
    [hiccup.page :as hcp :refer [html5]]
    [hiccup.core :as hcc :refer [html h]]
    [elenent.ui :as ui]
-   [elenent.db :as db]
-   ))
+   [elenent.db :as db]))
+
+(def unfound "Not Found")
+(def static-path "static")
 
 (defn greet [req]
   (do 
     (println (str req))
     {:status 200
      :headers {}
-     :body (ui/layout (ui/greet-page))
+     :body (ui/layout (ui/greet-page))}))
 
-     }))
-
-(comment 
-  (defn get-reports [req]
-    {:status 200
-     :headers {}
-     :body (elpg/layout (items-page assets-read-from-db))})
-
-  (defn get-assets [req]
-    {:status 200
-     :headers {}
-     :body (str "this is asset get. "
-                "you asked "
-                (get-in req [:route-params :id]))}))
-
-(def unfound "Not Found")
-
-(defn handle-treasurynote [req]
-  {:statue 200
-   :headers {}
-   :body (ui/layout
-          (ui/asset-treasurynotes
-           [{:ticker "abc" :multiplier 100000}
-            {:ticker "def" :multiplier 200000}]
-                      ))})
-
-(defn sign-up-client [req]
+(defn handle-client-sign-up [req]
   {:status 200
    :headers {}
    :body (ui/layout
-          (ui/navbar)
-          (ui/sign-up-client-comp)
-          )})
+          (ui/sign-up-client-comp))})
+
+(defn handle-create-client [req]
+  (let [name (get-in req [:params "name"])
+        email (get-in req [:params "email"])
+        client-id (db/create-client name email)])
+  {:status 302
+   :headers {"Location" "/clients"}
+   :body ""})
 
 (cc/defroutes routes
   (cc/GET "/" [] greet)
-  (cc/GET "/sign-up-client" [] sign-up-client)
-  (cc/GET "/treasurynotes" [] handle-treasurynote)
-  ;;  (cc/GET "/assets/:id" [] get-assets)
-;;  (cc/GET "/contracts" [] greet)
-;;  (cc/GET "/reports" [] get-reports)
+  (cc/GET "/client-sign-up" [] handle-client-sign-up)
+  (cc/POST "/clients" [] handle-create-client)
   (cr/not-found unfound))
-
-(def static-path "static")
 
 (def app
   (rmf/wrap-file-info 

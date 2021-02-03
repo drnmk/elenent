@@ -36,7 +36,7 @@
     (define-client db)
     (define-client-info db)))
 
-(define-tables)
+;; (define-tables)
 
 (defn create-client [client-name client-email] 
   (let [cid (-> (create-client-get-id
@@ -51,8 +51,6 @@
          :email client-email
          :log_id lid})))
 
-(create-client "Darren Corporation" "admin@darrencorp.com")
-
 (defn update-client [client-id client-name client-email] 
   (let [log-id (-> (create-log-get-id
                  db {:by client-id})
@@ -63,9 +61,6 @@
          :email client-email 
          :log_id log-id})))
 
-(update-client 1 "Kim Corporation" "admin@kim.com")
-
 (defn get-client [client-id]
   (get-client-by-id db {:cid client-id}))
 
-(get-client 1)
