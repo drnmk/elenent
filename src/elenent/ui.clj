@@ -3,25 +3,52 @@
    [hiccup.page :as hcp :refer [html5]]
    [hiccup.core :as hcc :refer [html h]]))
 
+(def layout-links
+  {:meta-content "width=device-width, initial-scale=1.0"
+   :style "/bootstrap/css/bootstrap.min.css"
+   :ajax-js "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"
+   :bootstrap-js "/bootstrap/js/bootstrap.min.js"})
 
- (defn navbar []
-   [:div
-    [:p "navigation bar under construction."]])
-
-(defn layout [components]
+(defn layout [& components]
   (hcp/html5 {:lang :en}
              [:head
               [:title "Elenent!"]
               [:meta {:name :viewport
-                      :content "width=device-width, initial-scale=1.0"}]
-              [:link {:href "/bootstrap/css/bootstrap.min.css"
+                      :content (layout-links :meta-content)}]
+              [:link {:href (layout-links :style)
                       :rel :stylesheet}]]
              [:body
-              [:div
-               navbar
-               components]
-              [:script {:src "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"}]
-              [:script {:src "/bootstrap/js/bootstrap.min.js"}]]))
+              [:div components]
+              [:script {:src (layout-links :ajax-js) }]
+              [:script {:src (layout-links :bootstrap-js)}]]))
+
+(defn navbar []
+  [:div.container
+   [:h1 "hello navbar."]])
+
+(defn sign-up-client-comp []
+  [:div.container
+   [:h1 "Sign Up as Investor Group"]
+   [:div.form-group 
+    [:label {:for "usr"} "Investor Group Name:"]
+    [:input {:type "text"
+             :class "form-control"
+             :id "usr"}]]
+   [:div.form-group 
+    [:label {:for "usr"} "Investor Group Email:"]
+    [:input {:type "text"
+             :class "form-control"
+             :id "usr"}]]
+   [:div.form-group 
+    [:label {:for "usr"} "Investor Group Password:"]
+    [:input {:type "text"
+             :class "form-control"
+             :id "usr"}]]
+   [:input {:type "submit"
+            :class "btn btn-info"
+            :value "Submit Button"}]
+   ])
+
 
 (defn greet-page []
   [:div.container

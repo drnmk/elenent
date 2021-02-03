@@ -47,8 +47,17 @@
             {:ticker "def" :multiplier 200000}]
                       ))})
 
+(defn sign-up-client [req]
+  {:status 200
+   :headers {}
+   :body (ui/layout
+          (ui/navbar)
+          (ui/sign-up-client-comp)
+          )})
+
 (cc/defroutes routes
   (cc/GET "/" [] greet)
+  (cc/GET "/sign-up-client" [] sign-up-client)
   (cc/GET "/treasurynotes" [] handle-treasurynote)
   ;;  (cc/GET "/assets/:id" [] get-assets)
 ;;  (cc/GET "/contracts" [] greet)
