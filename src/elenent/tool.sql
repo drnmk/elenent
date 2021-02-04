@@ -1,4 +1,70 @@
--- src/elenent/tool.sql
+
+
+-- :name insert-into-trait :!
+insert into trait (id, subject, attribute, uniq, single, vtype)
+values (default, :subject, :attribute, :uniq, :single, :vtype)
+
+-- :name select-count-existing-trait :?
+select count(*)
+from trait
+where subject = :subject
+and attribute = :attribute
+
+-- :name select-find-trait-id :?
+select id 
+from trait
+where subject = :subject
+and attribute = :attribute
+
+-- :name insert-into-entity :!
+insert into entity (id)
+values (default)
+returning id;
+
+-- :name insert-into-vtext :!
+insert into vtext (id, val)
+values (default, :val)
+returning id;
+
+-- :name select-get-available-atom-id :?
+select max(a.id) + 1 as id
+from atom as a;
+
+-- :name insert-into-atom :!
+insert into atom (id, entity_id, trait_id, value_id, ref_id, valid, stamp)
+values (:id, :entity_id, :trait_id, :value_id, :ref_id, :valid, default)
+
+-- :name select-show-full-atom-by-id :?
+select a.id as id, t.*, vt.val
+from atom as a
+left join vtext as vt on a.value_id = vt.id
+left join trait as t on a.trait_id = t.id
+where a.id = :id
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -- :name create-log-get-id :!
 insert into log (id, by, at)
