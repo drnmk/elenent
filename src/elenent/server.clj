@@ -17,7 +17,7 @@
 (def static-path "static")
 
 (defn greet [req]
-  (do 
+  (do
     (println (str req))
     {:status 200
      :headers {}
@@ -32,7 +32,10 @@
 (defn handle-create-client [req]
   (let [name (get-in req [:params "name"])
         email (get-in req [:params "email"])
-        client-id (db/create-client name email)])
+        ;; alt: {:strs [name email]} (:params req)
+        client-id (db/create-client
+                   #:client{:name name
+                            :email email})])
   {:status 302
    :headers {"Location" "/clients"}
    :body ""})
@@ -44,10 +47,18 @@
   (cr/not-found unfound))
 
 (def app
-  (rmf/wrap-file-info 
-   (rms/wrap-resource 
+  (rmf/wrap-file-info
+   (rms/wrap-resource
     (rmp/wrap-params routes)
     "static")))
+
+(comment
+  ;; consider arrow https://clojure.org/guides/threading_macros
+  (def app
+    (-> routes
+        (rmp/wrap-params)
+        (rms/wrap-resource "static")
+        (rmf/wrap-file-info))))
 
 (defn run-dev [port]
   (println "Development Server"
@@ -60,5 +71,5 @@
   (println "Production Server"
            "is Running at"
            port "...")
-  (jt/run-jetty app 
+  (jt/run-jetty app
                 {:port (Integer. port)}))
