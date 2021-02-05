@@ -13,78 +13,66 @@
    :user "elenent_adm"
    :password "el1234"})
 
-(do
-  (hgs/def-sqlvec-fns "elenent/base.sql"
-    {:adapter (hnj/hugsql-adapter-next-jdbc)})
-  (hgs/def-db-fns "elenent/base.sql"
-    {:adapter (hnj/hugsql-adapter-next-jdbc)})
-    (hgs/def-sqlvec-fns "elenent/tool.sql"
-    {:adapter (hnj/hugsql-adapter-next-jdbc)})
-  (hgs/def-db-fns "elenent/tool.sql"
-    {:adapter (hnj/hugsql-adapter-next-jdbc)}))
+(def sql-files
+  "all sql files in the project."
+  ["elenent/base.sql"
+   "elenent/tool.sql"])
+;; load sql files on the runtime.
+(for [sf sql-files]
+  (do 
+    (hgs/def-sqlvec-fns sf
+      {:adapter (hnj/hugsql-adapter-next-jdbc)})
+    (hgs/def-db-fns sf
+      {:adapter (hnj/hugsql-adapter-next-jdbc)})))
 
-(defn create-tables []
-  (do
-    (create-table-trait db)
-    (create-table-vint db)
-    (create-table-vfloat db)
-    (create-table-vtext db)
-    (create-table-vdate db)
-    (create-table-vstamp db)
-    (create-table-entity db)
-    (create-table-atom db)
-    ))
-(create-tables)
+;; commands to load/unload base
+;; not needed after initiation 
+;; (sql-create-base-sqlvec)
+;; (sql-create-base db)
+;; (sql-remove-base-sqlvec)
+;; (sql-remove-base db) ;; careul!!
 
-(defn remove-tables []
-  (drop-table-all db))
-(remove-tables)
+(defn find-trait-id [trait-key]
+  "expects trait-key such as :client-email"
+  (-> (sql-find-trait-id
+       db {:subject (namespace trait-key) 
+           :attribute (name trait-key)})
+      first :id))
+;; e.g. (find-trait-id :client/email)
 
-(defn load-traits [traits]
+(defn trait-unique? [trait-key]
+  "checks if trait table has zero item of the key."
+  (let [cnt (-> (sql-count-trait
+                 db {:subject (namespace trait-key) 
+                     :attribute (name trait-key)})
+                first :count)]
+    (if (= cnt 0)
+      true
+      false)))
+;; e.g. (trait-unique? :client/email)
+
+(defn load-new-traits [traits]
+  "load all newly added traits in schema."
   (for [trait traits]
-    (let [sbj  (namespace (key trait))
-          att (name (key trait))
-          uni (get (val trait) 0)
-          sng (get (val trait) 1)
-          vtp (name (get (val trait) 2))]
-      (when (> 1
-               (-> (select-count-existing-trait
-                    db {:subject sbj
-                        :attribute att})
-                   first :count))
-        (insert-into-trait
+    (let [k (key trait)
+          v (val trait)
+          sbj (namespace k)
+          att (name k)
+          uni (get v 0)
+          sng (get v 1)
+          vtp (name (get v 2))]
+      (when (trait-unique? k)
+        (sql-load-trait
          db {:subject sbj
              :attribute att
              :uniq uni 
              :single sng
              :vtype vtp})))))
-(load-traits scm/traits)
+;; only run when new traits 
+;; (load-new-traits scm/traits)
 
-(defn create-value-get-id [trait value]
-  (case (get (trait scm/traits) 2)
-    :text (-> (insert-into-vtext db {:val value}) first :id)))
 
-(defn create-atom [trait value]
-  (let [entity-id (-> (insert-into-entity db) first :id)
-        trait-id (-> (select-find-trait-id db {:subject (namespace trait)
-                                               :attribute (name trait)})
-                     first :id)
-        atom-id 1 ;;(-> (select-get-available-atom-id db) first :id)
-        value-id (create-value-get-id trait value)
-        ]
-    (insert-into-atom
-     db {:id atom-id 
-         :entity_id entity-id
-         :trait_id trait-id
-         :value_id value-id 
-         :ref_id atom-id 
-         :valid true})))
 
-(def trait :client/short-name)
-(def value "Darren Z")
-(create-atom :client/short-name "Darren, LLC")
-
-(select-show-full-atom-by-id db {:id 1})
 
 
 
