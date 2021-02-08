@@ -8,42 +8,20 @@
 -- enter database: # \c elenent_db;
 
 -- :name sql-create-base :!
-create extension "pgcrypto";
 create table trait
-( id uuid primary key default gen_random_uuid()
-, subject text not null 
-, attribute text not null
-, uniq boolean not null 
-, single boolean not null 
-, vtype text not null );
-create table vint
-( id uuid primary key default gen_random_uuid()
-, val int not null );
-create table vfloat
-( id uuid primary key default gen_random_uuid()
-, val float not null );
-create table vtext
-( id uuid primary key default gen_random_uuid()
-, val text not null );
-create table vbool
-( id uuid primary key default gen_random_uuid()
-, val bool not null );
-create table vdate
-( id uuid primary key default gen_random_uuid()
-, val date not null );
-create table vstamp
-( id uuid primary key default gen_random_uuid()
-, val timestamp not null );
+( key text primary key
+, uni text not null 
+, cardi text  not null 
+, vtype text not null
+, stamp timestamp not null default current_timestamp );
 create table atom
 ( id uuid primary key
-, entity uuid not null 
-, trait_id uuid references trait(id) not null
-, value_id uuid not null
-, ref_id uuid not null
+, ent uuid not null 
+, tkey text references trait(key) not null
+, val text not null
+, rid uuid not null
 , valid boolean not null 
 , stamp timestamp not null default current_timestamp );
 
 -- :name sql-remove-base :!
-drop extension "pgcrypto";
-drop table trait, vint, vfloat
-, vbool, vtext, vdate, vstamp, atom;
+drop table trait, atom;

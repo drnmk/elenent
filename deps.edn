@@ -11,4 +11,5 @@
   danlentz/clj-uuid {:mvn/version "0.1.9"}
   com.layerware/hugsql {:mvn/version "0.5.1"}
   com.layerware/hugsql-adapter-next-jdbc {:mvn/version "0.5.1"}
+  honeysql/honeysql {:mvn/version "1.0.444"}
   hiccup/hiccup {:mvn/version "2.0.0-alpha2"}}}
