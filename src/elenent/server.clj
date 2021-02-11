@@ -28,19 +28,19 @@
    :headers {}
    :body (ui/layout
           (ui/sign-up-client-comp))})
-
-(defn handle-create-client [req]
-  (let [name (get-in req [:params "name"])
-        email (get-in req [:params "email"])
-        client-id (db/create-client name email)])
-  {:status 302
-   :headers {"Location" "/clients"}
-   :body ""})
+(comment 
+  (defn handle-create-client [req]
+    (let [name (get-in req [:params "name"])
+          email (get-in req [:params "email"])
+          client-id (db/create-client name email)])
+    {:status 302
+     :headers {"Location" "/clients"}
+     :body ""}))
 
 (cc/defroutes routes
   (cc/GET "/" [] greet)
   (cc/GET "/client-sign-up" [] handle-client-sign-up)
-  (cc/POST "/clients" [] handle-create-client)
+ ;;  (cc/POST "/clients" [] handle-create-client)
   (cr/not-found unfound))
 
 (def app

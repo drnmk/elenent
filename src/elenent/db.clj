@@ -169,10 +169,9 @@
          (hsh/values [[id ent tkey val rid false :default]])
          hsc/format))))
 
-(defn get-atoms []
-  (sql-get-atoms db))
+;; (defn get-atoms [] (sql-get-atoms db))
 ;; (get-atoms)
 
-(defn get-atoms-by-ent [ent]
-  (sql-get-atoms-by-ent db {:ent ent}))
+;; (defn get-atoms-by-ent [ent] (sql-get-atoms-by-ent db {:ent ent}))
+
 ;; (get-atoms-by-ent (str->uuid "d8c49a00-6a16-11eb-a691-2e6a399ed2c1"))
