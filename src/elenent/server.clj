@@ -33,14 +33,11 @@
        "is Running at "
        port "..."))
 
-(defn run-dev [port]
+(defn run [port purpose]
   (do 
     (serve-message port)
-    (jt/run-jetty (rmr/wrap-reload #'app)
+    (jt/run-jetty (case purpose
+                    :dev (rmr/wrap-reload #'app)
+                    :prod app)
                   {:port (Integer. port)})))
 
-(defn run-prod [port]
-  (do
-    (serve-message port)
-    (jt/run-jetty app 
-                  {:port (Integer. port)})))
