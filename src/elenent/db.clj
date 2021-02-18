@@ -37,12 +37,17 @@
 (defn read-positions []
   (crux/q
    (crux/db cn)
-   '{:find [name kind desc]
+   '{:find [id name kind desc]
      :where [[e :position/kind :future]
-             [e :position/name name]
+[e :crux.db/id id]
+[e :position/name name]
              [e :position/kind kind]
-             [e :position/desc desc]]}))
+             [e :position/desc desc
+              ]
 
-(for [p (into [] (read-positions))]
-  (println (last p))
-  )
+
+             ]}))
+
+(type (first 
+       (read-positions)))
+

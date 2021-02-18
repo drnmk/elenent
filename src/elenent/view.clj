@@ -32,15 +32,17 @@
    [:table {:class "table"}
     [:thead  
      [:tr
+      [:th "Serial"]
       [:th "Position Name"]
-      [:th "Breed"]
+      [:th "Kind"]
       [:th "Description"]]]
     [:tbody
      (for [position positions]
        [:tr  
-        [:td (first position)]
-        [:td (second position)]
-        [:td (last position)]])]]])
+        [:td (nth position 0)]
+        [:td (nth position 1)]
+        [:td (nth position 2)]
+        [:td (nth position 3)]])]]])
 
 (defn position-form []
   [:form {:method "POST" :action "/positions"}
