@@ -30,24 +30,33 @@
       :position/kind kind
       :position/desc desc}]]))
 
-(write-position "abc111future"
-                :future
-                "to hedge interest rate hike")
-
-(defn read-positions []
+(defn read-positions [] ;; db, user/session
   (crux/q
-   (crux/db cn)
+   (crux/db cn) ;; this part passed as argument 
    '{:find [id name kind desc]
      :where [[e :position/kind :future]
-[e :crux.db/id id]
-[e :position/name name]
+             [e :crux.db/id id]
+             [e :position/name name]
              [e :position/kind kind]
-             [e :position/desc desc
-              ]
+             [e :position/desc desc]]}))
 
+(-> 
+ (read-positions)
+ first
+ type
+ )
 
-             ]}))
+(def first-id 
+  (ffirst 
+   (crux/q
+    (crux/db cn)
+    '{:find [id]
+      :where [[e :position/kind :future]
+              [e :crux.db/id id]]})))
 
-(type (first 
-       (read-positions)))
+first-id
 
+(crux/entity
+ (crux/db cn)
+ first-id
+ )

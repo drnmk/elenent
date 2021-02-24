@@ -13,7 +13,7 @@
 
 (defn post-positions [rq]
   (let [name (get-in rq [:params "name"])
-        kind :future
+        kind :future ;; will update 
         desc (get-in rq [:params "desc"])
         item (db/write-position name kind desc)]
     {:status 302
