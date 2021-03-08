@@ -1,10 +1,11 @@
 (ns elenent.main
-  (:require [elenent.server :as srv]))
+  (:require
+   [elenent.server.control :as server]))
 
 (def port 8080)
 
 (defn run-dev [args]
-  (srv/run port :dev))
+  (server/run port :dev))
 
 (defn run-prod [args]
-  (srv/run port :prod))
+  (server/run port :prod))

@@ -1,0 +1,74 @@
+/usr/share/zsh/manjaro-zsh-config:bindkey:85: cannot bind to an empty key sequence
+/usr/share/zsh/manjaro-zsh-config:bindkey:86: cannot bind to an empty key sequence
+drnmk@manjaro Linux 5.4.89-1-MANJARO x86_64 20.2.1 Nibia
+~/.../src/elenent >>> clj -X elenent.main/run-dev
+                      clj -X elenent.main/run-dev
+rlwrap: warning: Your terminal 'dumb' is not fully functional, expect some problems.
+
+warnings can be silenced by the --no-warnings (-n) option
+Execution error (FileNotFoundException) at clojure.run.exec/requiring-resolve' (exec.clj:31).
+Could not locate elenent/main__init.class, elenent/main.clj or elenent/main.cljc on classpath.
+
+Full report at:
+/tmp/clojure-6160392440552972250.edn
+                                                                                                                                          
+~/.../src/elenent >>> clj -X elenent.main/run-dev
+                      clj -X elenent.main/run-dev
+rlwrap: warning: Your terminal 'dumb' is not fully functional, expect some problems.
+
+warnings can be silenced by the --no-warnings (-n) option
+Execution error (FileNotFoundException) at clojure.run.exec/requiring-resolve' (exec.clj:31).
+Could not locate elenent/main__init.class, elenent/main.clj or elenent/main.cljc on classpath.
+
+Full report at:
+/tmp/clojure-7263613841117301285.edn
+                                                                                                                                          
+~/.../src/elenent >>> 
+
+~/.../src/elenent >>> 
+
+~/.../src/elenent >>> clj -X elenent.main/run-dev
+                      clj -X elenent.main/run-dev
+rlwrap: warning: Your terminal 'dumb' is not fully functional, expect some problems.
+
+warnings can be silenced by the --no-warnings (-n) option
+Execution error (FileNotFoundException) at clojure.run.exec/requiring-resolve' (exec.clj:31).
+Could not locate elenent/main__init.class, elenent/main.clj or elenent/main.cljc on classpath.
+
+Full report at:
+/tmp/clojure-6656813263223824482.edn
+~/.../src/elenent >>> cd ..
+cd ..
+~/.../elenent/src >>> cd .
+cd .
+~/.../elenent/src >>> cd ..
+cd ..
+~/Documents/elenent >>> ls
+ls
+deps.edn  readme.md  resources	src
+~/Documents/elenent >>> clj -X elenent.main/run-dev
+                        clj -X elenent.main/run-dev
+rlwrap: warning: Your terminal 'dumb' is not fully functional, expect some problems.
+
+warnings can be silenced by the --no-warnings (-n) option
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+Syntax error compiling at (elenent/comps/future/control.clj:16:29).
+Unable to resolve symbol: view-futureform in this context
+
+Full report at:
+/tmp/clojure-6944327956414609661.edn
+                                                                                                                                          
+~/Documents/elenent >>> clj -X elenent.main/run-dev
+                        clj -X elenent.main/run-dev
+rlwrap: warning: Your terminal 'dumb' is not fully functional, expect some problems.
+
+warnings can be silenced by the --no-warnings (-n) option
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+                                                                                                                                            C-c C-c
+~/Documents/elenent >>> 
+
+~/Documents/elenent >>> clj -X -n elenent.main/run-dev
