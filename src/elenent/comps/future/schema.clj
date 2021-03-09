@@ -3,8 +3,10 @@
    [clojure.spec.alpha :as s]
    [java-time :as t]))
 
+
+(def underlying-category #{:bond :emini})
+(s/def :future/underlying underlying-category)
 (s/def :crux.db/id uuid?)
-(s/def :future/underlying #{:bond :emini})
 (s/def :future/cusip string?) ;; e.g. FVU1
 (s/def :future/mulitplier int?) ;; e.g. 100000
 (s/def :future/mature-on

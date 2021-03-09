@@ -8,5 +8,5 @@
   (c/GET "/futures" [] future/get-futures)
   (c/GET "/futures-add" [] future/add-futures)
   (c/GET "/futures-view-add" [] future/get-futures-add-one)
-  (c/POST "/futures" [] future/add-future)
+  (c/POST "/futures" [] future/add-futures)
   (r/not-found "Not Found"))

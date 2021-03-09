@@ -1,7 +1,8 @@
 (ns elenent.comps.future.view
   (:require
    [hiccup.core :as c]
-   [hiccup.page :as p]))
+   [hiccup.page :as p]
+   [elenent.comps.future.schema :refer :all]))
 
   (defn view-futures-table [futures]
     [:div
@@ -66,64 +67,56 @@
     [:div {:class "container"}
      [:div {:class "columns is-centered"}
       [:div {:class "column is-4"}
-       [:form {:action ""
+       [:form {:method "POST"
+               :action "/futures"
                :class "box"}
-        
-        [:div {:class "field"}
-         [:label {:class "label"} "Underlying Type"]
-         [:div {:class "control has-icons-left"}
-          [:input {:type "email"
-                   :class "input"
-                   :placeholder "john@example.com"}]
-          [:span {:class "icon is-small is-left"}
-           [:i {:class "fa fa-envelope"}]]]]
 
         [:div {:class "field"}
-         [:label {:class "label"} "Underlying Type"]
-         [:div {:class "control has-icons-left"}
-          [:input {:type "email"
-                   :class "input"
-                   :placeholder "john@example.com"}]
-          [:span {:class "icon is-small is-left"}
-           [:i {:class "fa fa-envelope"}]]]]
+         [:label {:class "label"}
+          "Underlying"]
+         [:div ;;  {:class "dropdown is-active"}
+          [:div {:class "dropdown-trigger"}
+           [:button {:class "button"
+                   ;;  :aria-haspopup "true"
+                     :aria-controls "dropdown-menu"}
+            [:span "Select"]
+           ;;  [:span {:class "icon is-small"} [:i {:class "fas fa-angle-down" :aria-hidden "true"}]]
 
-        [:div {:class "field"}
-         [:label {:class "label"} "Underlying Type"]
-         [:div {:class "control has-icons-left"}
-          [:input {:type "email"
-                   :class "input"
-                   :placeholder "john@example.com"}]
-          [:span {:class "icon is-small is-left"}
-           [:i {:class "fa fa-envelope"}]]]]
-
-        [:div {:class "field"}
-         [:label {:class "label"} "Underlying Type"]
-         [:div {:class "control has-icons-left"}
-          [:input {:type "email"
-                   :class "input"
-                   :placeholder "john@example.com"}]
-          [:span {:class "icon is-small is-left"}
-           [:i {:class "fa fa-envelope"}]]]]
-        
+            ]]
+          [:div {:class "dropdown-menu"
+                 :id "dropdown-menu"
+                 :role "menu"}
+           [:div {:class "dropdown-content"}
+            (for [category underlying-category]
+              [:a {:class "dropdown-item"}
+               (name category)])]]]]
+           
         [:div {:class "field"}
          [:label {:class "label"} "Cusip"]
          [:div {:class "control has-icons-left"}
-          [:input {:type "password"
+          [:input {:type "text"
+                   :class "input"
+                   :placeholder "Type Cusip in."}]
+          [:span {:class "icon is-small is-left"}
+           [:i {:class "fa fa-envelope"}]]]]
+
+        [:div {:class "field"}
+         [:label {:class "label"} "Multiplier"]
+         [:div {:class "control has-icons-left"}
+          [:input {:type "number"
+                   :class "input"
+                   :placeholder "Tpe Multiplier in Integer."}]
+          [:span {:class "icon is-small is-left"}
+           [:i {:class "fa fa-envelope"}]]]]
+
+        [:div {:class "field"}
+         [:label {:class "label"} "Mature On"]
+         [:div {:class "control has-icons-left"}
+          [:input {:type "date"
                    :class "input"
                    :placeholder "john@example.com"}]
           [:span {:class "icon is-small is-left"}
-           [:i {:class "fa fa-lock"}]]]]
+           [:i {:class "fa fa-envelope"}]]]]
 
-
-
-
-
-
-
-        
-        [:div {:class "field"}
-         [:label {:class "label"}
-          [:input {:type "checkbox"
-                   :class "checkbox"}]"Remember me"]]
         [:div {:class "field"}
          [:button {:class "button is-success"} "Login"]]]]]]]])
