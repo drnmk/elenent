@@ -25,5 +25,5 @@
     [:link {:rel :stylesheet
             :href (:icon project-links)}]]
    [:body
-    [:div
+    [:div {:class "hero is-primary is-fullheight"}
      components]]))
