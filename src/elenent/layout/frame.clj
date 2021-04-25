@@ -1,4 +1,4 @@
-(ns elenent.layout.control
+(ns elenent.layout.frame
   (:require
    [hiccup.core :as c]
    [hiccup.page :as p]))
@@ -25,5 +25,5 @@
     [:link {:rel :stylesheet
             :href (:icon project-links)}]]
    [:body
-    [:div {:class "hero is-primary is-fullheight"}
+    [:div
      components]]))
