@@ -1,4 +1,4 @@
-(ns elenent.tool.time
+(ns elenent.tool
   (:refer-clojure
    :exclude [range iterate format max min])
   (:require

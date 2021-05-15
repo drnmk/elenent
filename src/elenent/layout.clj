@@ -1,7 +1,9 @@
-(ns elenent.layout.frame
+(ns elenent.layout
   (:require
-   [hiccup.core :as c]
-   [hiccup.page :as p]))
+;;   [hiccup.core :as c]
+   [hiccup.page :as p])
+  )
+
 
 (def title "elenent investment manager")
 (def project-links
