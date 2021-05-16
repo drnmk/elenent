@@ -6,7 +6,8 @@
 (def configs
   {:server {:options {:port 1234
                       :join? false}}
-   :db {:options {:port 0}}})
+   :db {:options {:port 0
+                  :counter-init 0}}})
 
 (def system nil)
 

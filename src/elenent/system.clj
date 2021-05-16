@@ -1,7 +1,7 @@
 (ns elenent.system
   (:require [com.stuartsierra.component :as component]
-            [elenent.db :as db]
-            [elenent.server :as server]))
+            [elenent.db :as eldb]
+            [elenent.server :as elserver]))
 
 (defrecord Status []
   component/Lifecycle
@@ -14,7 +14,7 @@
   [configs]
   (component/system-map
    :status (->Status)
-   :db (db/map->Db (:db configs))
+   :db (eldb/map->Db (:db configs))
    :server (component/using 
-            (server/map->Server (:server configs))
+            (elserver/map->Server (:server configs))
             [:db])))
