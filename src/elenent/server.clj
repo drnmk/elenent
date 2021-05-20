@@ -1,10 +1,13 @@
 (ns elenent.server
   (:require
-   [com.stuartsierra.component :as component]
-   [ring.adapter.jetty :as jet]
-   [elenent.db :as eldb]))
+   [com.stuartsierra.component :refer [Lifecycle]]
+   [ring.adapter.jetty :refer [run-jetty]]
+   [compojure.core :refer [routes GET POST DELETE]]
+   [elenent.db :as eldb]
+   [elenent.layout :as ellayout]
+   [elenent.page :as elpage]))
 
-(defn make-handler [db]
+(defn counter-handler [db]
   (fn [request]
     (let [_ (eldb/update-counter (:conn db) inc)]
       {:status 200
@@ -13,12 +16,22 @@
                   (-> (eldb/get-counter (:conn db))
                       :num))})))
 
+(def routing
+  (routes 
+   (GET "/" [] "hello")
+   (GET "/counter" [] (counter-handler))
+   (GET "/login/:id" [id] (str "login id is " id))
+   (GET "/dashboard" [] "dashboard")
+   (GET "/deal" [] (ellayout/basic (elpage/deal-table)))
+   (GET "/position" [] "position")
+   (GET "/transaction" [] "transaction")))
+
+(def app-sys routing)
+
 (defrecord Server [options db instance]
-  component/Lifecycle
+  Lifecycle
   (start [this]
-    (let [instance (jet/run-jetty
-                  (make-handler db)
-                  options)]
+    (let [instance (run-jetty app-sys options)]
       (assoc this :instance instance)))
   (stop [this]
     (when instance (.stop instance))

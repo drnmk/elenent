@@ -1,8 +1,5 @@
 (ns elenent.tool
-  (:refer-clojure
-   :exclude [range iterate format max min])
-  (:require
-   [java-time :as jt]))
+  (:require [java-time :as jt]))
 
 (defn make-date-zoned [{:keys [year month day]}]
   (jt/zoned-date-time year month day))

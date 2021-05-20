@@ -1,6 +1,6 @@
 (ns user
-  (:require [com.stuartsierra.component :as component]
-            [clojure.tools.namespace.repl :refer (refresh)]
+  (:require [com.stuartsierra.component :refer [start stop]]
+            [clojure.tools.namespace.repl :refer [refresh]]
             [elenent.system :as app]))
 
 (def configs
@@ -16,20 +16,20 @@
    #'system
    (constantly (app/make-system configs))))
 
-(defn start []
+(defn begin []
   (alter-var-root
    #'system
-   component/start))
+   start))
 
-(defn stop []
+(defn end []
   (alter-var-root
    #'system
-   (fn [s] (when s (component/stop s)))))
+   (fn [s] (when s (stop s)))))
 
 (defn go []
   (init)
-  (start))
+  (begin))
 
 (defn reset []
-  (stop)
+  (end)
   (refresh :after 'user/go))

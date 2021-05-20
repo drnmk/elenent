@@ -1,34 +1,34 @@
 (ns elenent.db
   (:require
-   [com.stuartsierra.component :as component]
-   [crux.api :as crux]))
+   [com.stuartsierra.component :refer [Lifecycle]]
+   [crux.api :refer [entity db submit-tx start-node]]))
 
 (defn make-counter [num]
   {:crux.db/id :counter
    :num num})
 
 (defn get-counter [conn]
-  (crux/entity
-   (crux/db conn)
+  (entity
+   (db conn)
    :counter))
 
 (defn init-counter [conn]
-  (crux/submit-tx
+  (submit-tx
    conn
    [[:crux.tx/put
      (make-counter 0)]]))
 
 (defn update-counter [conn f]
   (let [bal (:num (get-counter conn))]
-    (crux/submit-tx
+    (submit-tx
      conn
      [[:crux.tx/put
        (make-counter (f bal))]])))
 
 (defrecord Db [options conn]
-  component/Lifecycle
+  Lifecycle
   (start [this]
-    (let [conn (crux/start-node {})]
+    (let [conn (start-node {})]
       (init-counter conn)
       (assoc this :conn conn)))
   (stop [this]
