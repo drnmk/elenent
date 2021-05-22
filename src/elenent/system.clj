@@ -1,8 +1,8 @@
 (ns elenent.system
   (:require [com.stuartsierra.component
              :refer [Lifecycle system-map using]]
-            [elenent.db :as eldb]
-            [elenent.server :as elserver]))
+            [elenent.data :as data]
+            [elenent.server :as server]))
 
 (defrecord Status []
   Lifecycle
@@ -15,7 +15,7 @@
   [configs]
   (system-map
    :status (->Status)
-   :db (eldb/map->Db (:db configs))
+   :db (data/map->Db (:db configs))
    :server (using 
-            (elserver/map->Server (:server configs))
+            (server/map->Server (:server configs))
             [:db])))
